@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendation</title>
+    <link rel="stylesheet" href="./static/style.css">
+
+<body>
+    <h1>Olive-young 추천 시스템</h1>
+    
+    <form action="/" method="POST">
+        <div>
+        <label for="skin_type">피부 타입:</label>
+        <select id="skin_type" name="skin_type">
+            <option value="건성">건성</option>
+            <option value="복합성">복합성</option>
+            <option value="지성">지성</option>
+        </select><br>
+
+        <label for="skin_problem">피부 고민:</label>
+        <select id="skin_problem" name="skin_problem">
+            <option value="보습">보습</option>
+            <option value="진정">진정</option>
+            <option value="주름/미백">주름/미백</option>
+        </select><br>
+
+        <label for="skin_problem_plus">추가적인 피부 고민을 골라주세요(다중선택가능):</label><br>
+        <div class="checkbox-group">
+        <input type="checkbox" name="skin_problem_plus" value="각질"> 각질
+        <input type="checkbox" name="skin_problem_plus" value="아토피"> 아토피
+        <input type="checkbox" name="skin_problem_plus" value="다크서클"> 다크서클
+        <input type="checkbox" name="skin_problem_plus" value="모공"> 모공
+        <input type="checkbox" name="skin_problem_plus" value="블랙헤드"> 블랙헤드
+        <input type="checkbox" name="skin_problem_plus" value="잡티"> 잡티
+        <input type="checkbox" name="skin_problem_plus" value="탄력"> 탄력
+        <input type="checkbox" name="skin_problem_plus" value="트러블"> 트러블
+        <input type="checkbox" name="skin_problem_plus" value="피지과다"> 피지과다
+        <input type="checkbox" name="skin_problem_plus" value="홍조"> 홍조<br>
+        </div>
+
+        <label for="reaction">피부가 자극에 민감한가요?</label>
+        <select id="reaction" name="reaction">
+            <option value="Y">예</option>
+            <option value="N">아니오</option>
+        </select><br>
+
+        <label for="max_price">가격의 상한선을 입력하세요:</label>
+        <div class="input-group">
+        <input type="text" id="max_price" name="max_price" required>
+        <span class="unit">원</span>
+        </div>
+        <br>
+
+        <label for="priorities">중요하게 생각하는 피부특성을 고르세요(다중선택가능):</label><br>
+        <div class="checkbox-group">
+        <input type="checkbox" name="priorities" value="skin_type"> 피부 타입<br>
+        <input type="checkbox" name="priorities" value="skin_problem"> 피부 고민<br>
+        <input type="checkbox" name="priorities" value="reaction"> 피부 민감성<br>
+        </div>
+
+        <label for="query">추가로 원하는 상품의 특징을 입력하세요:</label>
+        <input type="text" id="query" name="query" required><br>
+
+        <label for="sort_order">정렬:</label>
+        <select id="sort_order" name="sort_order">
+            <option value="인기순">인기순</option>
+            <option value="관련도">관련도순</option>
+            <option value="가격 순">가격순</option>
+            <option value="평점 순">평점순</option>
+            <option value="맞춤 추천">맞춤 추천순</option>
+        </select><br><br>
+    </div>
+        <input type="submit" value="Recommend Products">
+    </form>
+
+    <!-- 추천 결과가 있을 때만 보여줌 -->
+    {% if result_df is not none and not result_df.empty %}
+    <h2>추천 상품</h2>
+    <table border="1" cellspacing="0" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Review Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idx, row in result_df.iterrows() %}
+            <tr>
+                <td>{{ idx}}</td> <!-- 순위 -->
+                <td>{{ row['제품명_product'] }}</td> <!-- 제품명 -->
+                <td>{{ row['최종 가격']}}</td>
+                <td>{{ row['리뷰 점수']}}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- 에러 메시지가 있을 때만 보여줌 -->
+    {% if error_message %}
+    <h2>Error</h2>
+    <p>{{ error_message }}</p>
+    {% endif %}
+
+</body>
+
+</html>
