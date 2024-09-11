@@ -11,6 +11,7 @@
 - **기능 1**: 사용자의 피부타입에 맞는 제품을 추천합니다.
 - **기능 2**: 사용자가 원하는 요구사항이 보편적이지 않더라도 sementic search를 통해 이와 관련된 상품을 찾아냅니다.
 - **기능 3**: 편리한 인터페이스로 사용자에게 정보를 제공합니다.
+- **기능 4**: 제품 바로가기 링크를 제공합니다. (24.09.11 기능 추가)
 
 ### 기술 스택
 - **프로그래밍 언어**: Python, css, html
@@ -18,13 +19,15 @@
 
 ## 데모 (Demo)
 
-https://github.com/user-attachments/assets/0badad80-8aaa-4274-a10a-66bb01fd5684
+
+https://github.com/user-attachments/assets/940238e1-c433-428d-b1a0-42c081d9450e
+
 
 ## 설치 (Installation)
 **OUTTA-oliveyoung_recommendation**를 설치하려면 다음 단계를 따르세요.
 1. 저장소를 클론합니다:
    ```bash
-   git clone https://github.com/username/OUTTA-oliveyoung_recommendation.git
+   git clone https://github.com/peridot0810/OUTTA-oliveyoung_recommendation.git
    cd OUTTA-oliveyoung_recommendation
 
 2. 가상환경을 설정합니다.
@@ -35,6 +38,9 @@ https://github.com/user-attachments/assets/0badad80-8aaa-4274-a10a-66bb01fd5684
 3. 필요한 패키지를 설치합니다.
    ```bash
    pip install -r requirements.txt
+   **주의**
+   - Python 3.7 이상, 3.11 미만의 버전에서만 설치
+   - macOS 사용 시 필요한 패키지 별도 다운로드가 필요할 수 있습니다
    
 4. Flask 서버 실행
    ```bash
