@@ -73,13 +73,13 @@ def recommend_products1(products, user_input, priorities):
 
 def embed_text(text):
 
- inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
- with torch.no_grad():
-  model_output = model(**inputs)
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        model_output = model(**inputs)
 
 # [CLS] 토큰의 출력(첫 번째 토큰)을 임베딩으로 사용
- embedding = model_output.last_hidden_state[:, 0, :].squeeze().cpu().numpy()
- return embedding
+    embedding = model_output.last_hidden_state[:, 0, :].squeeze().cpu().numpy()
+    return embedding
 
 
 
@@ -140,20 +140,20 @@ def recommend_products2(user_choice, product_df, top_products_df, merged_df):
     merged_top_df = pd.merge(merged_df, top_products_df, left_on='제품명_product', right_on='제품명_product', how='inner')
 
     # '최종 가격'과 '리뷰 점수'를 병합된 데이터프레임에 추가
-    merged_top_df = pd.merge(merged_top_df, product_df[['제품명', '최종 가격', '리뷰 점수', '리뷰 수']], left_on='제품명_product', right_on='제품명', how='left')
+    merged_top_df = pd.merge(merged_top_df, product_df[['제품명', '최종 가격', '리뷰 점수', '리뷰 수', '제품 링크']], left_on='제품명_product', right_on='제품명', how='left')
 
-     # 예상 별점 계산
+    # 예상 별점 계산
     product_list = list(merged_top_df['제품명'].unique())
     merged_top_df['별점*유사도'] = merged_top_df['별점'] * merged_top_df['reviewer_user_cosine_similarity']
     merged_top_df['유사도합'] = 0
     merged_top_df['예상 별점'] = 0
 
     for product in product_list:
-      target_df = merged_top_df[merged_top_df['제품명']==product]
-      sim_sum = target_df['reviewer_user_cosine_similarity'].sum()
-      merged_top_df.loc[merged_top_df['제품명']==product, '유사도합'] = sim_sum
-      if sim_sum != 0:  # 유사도 합이 0이 아닌경우에만! 0인 경우 예상별점은 0점으로 처리
-        merged_top_df.loc[merged_top_df['제품명']==product, '예상 별점'] = target_df['별점*유사도'].sum() / sim_sum
+        target_df = merged_top_df[merged_top_df['제품명']==product]
+        sim_sum = target_df['reviewer_user_cosine_similarity'].sum()
+        merged_top_df.loc[merged_top_df['제품명']==product, '유사도합'] = sim_sum
+        if sim_sum != 0:  # 유사도 합이 0이 아닌경우에만! 0인 경우 예상별점은 0점으로 처리
+            merged_top_df.loc[merged_top_df['제품명']==product, '예상 별점'] = target_df['별점*유사도'].sum() / sim_sum
 
     # 제품명 기준으로 중복 제거 (첫 번째 리뷰만 선택)
     merged_top_df = merged_top_df.drop_duplicates(subset=['제품명_product'])
@@ -181,7 +181,7 @@ def recommend_products2(user_choice, product_df, top_products_df, merged_df):
     final_recommendations = sorted_df.head(5)
 
     # 최종 추천 결과 리턴
-    return final_recommendations[['제품명_product', 'final_score_result', '최종 가격', '리뷰 점수']]
+    return final_recommendations[['제품명_product', 'final_score_result', '최종 가격', '리뷰 점수', '제품 링크']]
 
 
 # 기본 라우트 - 사용자 입력을 받는 페이지
@@ -194,8 +194,8 @@ def index():
         concerns=request.form.getlist('skin_problem_plus')
         try:
             for i in range(len(concerns_list)):
-              if concerns_list[i] in concerns:
-                concerns_list_user[i] = 1
+                if concerns_list[i] in concerns:
+                    concerns_list_user[i] = 1
         except Exception as e:
             print({e})
         
@@ -243,6 +243,11 @@ def index():
 
                 # 사용자가 선택한 기준으로 최종 추천
                 result_df = recommend_products2(user_choice, product_df, top_products_df, merged_df)
+
+                # '제품 링크' 칼럼에 to_html 적용
+                # result_df['제품 링크'] = result_df['제품 링크'].apply(lambda x: f'<a href="{x}" target="_blank">제품 바로가기</a>')  # 'target="_blank"'는 새 창에서 열도록 설정
+                # html_table = result_df.to_html(escape=False)  # 'escape=False'로 설정하여 HTML 태그가 그대로 렌더링되도록 함
+
                 # 인덱스를 재설정하고, 기존 인덱스는 제거
                 result_df = result_df.reset_index(drop=True)
 
@@ -257,7 +262,7 @@ def index():
                 # 일부 열만 선택하여 전달
                 return render_template('index.html', result_df=result_df, titles=result_df.columns.values)
                 # return render_template('index.html', tables=[1,2,3,4])
-             
+            
             
             except Exception as e:
                 print(f"Error in recommend_products or processing result_df: {e}")
