@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/940238e1-c433-428d-b1a0-42c081d9450e
 3. 필요한 패키지를 설치합니다.
    ```bash
    pip install -r requirements.txt
-   **주의**
+**주의**
    - Python 3.7 이상, 3.11 미만의 버전에서만 설치
    - macOS 사용 시 필요한 패키지 별도 다운로드가 필요할 수 있습니다
    
