@@ -46,9 +46,6 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            # ECR 로그인
-            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-            
             # 기존 컨테이너 정리
             docker stop oliveyoung-cream-recommendation-server || true
             docker rm oliveyoung-cream-recommendation-server || true
