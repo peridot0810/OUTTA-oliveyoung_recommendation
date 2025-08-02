@@ -7,6 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
+
 # 기존 코드에서 불러오는 부분
 product_df = pd.read_excel('./data/product_preprocessed.xlsx')
 review_embedded=pd.read_excel('./data/review_preprocessed_summerized_embedded.xlsx')
