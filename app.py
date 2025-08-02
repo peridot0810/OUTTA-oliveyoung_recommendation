@@ -277,5 +277,6 @@ def index():
     # GET 요청 시 index.html 렌더링
     return render_template('index.html',result_df=None)
 
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=80)
